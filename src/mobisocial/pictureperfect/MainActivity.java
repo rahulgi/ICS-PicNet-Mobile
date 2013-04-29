@@ -101,6 +101,7 @@ public class MainActivity extends Activity {
 			
 			DbFeed feed = musubi.getFeed(feedUri);
 			uriPresenter.setText(feedUri.toString());
+			getPreferences(android.content.Context.MODE_PRIVATE).edit().putString(KEY_FEED_URI, feedUri.toString()).apply();
 			if (feed == null) {
 				Log.d(TAG, "feed is null?!?");
 				return;
