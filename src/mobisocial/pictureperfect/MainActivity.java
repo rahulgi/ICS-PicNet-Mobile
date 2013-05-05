@@ -31,10 +31,13 @@ public class MainActivity extends Activity {
 	private static final String ACTION_CREATE_FEED = "musubi.intent.action.CREATE_FEED";
 	private static final int REQUEST_CREATE_FEED = 1;
 	
+	private Musubi mMusubi;
+	
 	private Uri feedUri = null;
 	private final String KEY_FEED_URI = "feedUri";
 	
 	private TextView uriPresenter;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		uriPresenter = (TextView) findViewById(R.id.uriPresenter);
+		
+		if (!Musubi.isMusubiInstalled(this))
+			mMusubi = Musubi.getInstance(this);
 		
 		String uri = getPreferences(android.content.Context.MODE_PRIVATE).getString(KEY_FEED_URI, null);
 		if (uri != null) {
@@ -97,9 +103,7 @@ public class MainActivity extends Activity {
 			feedUri = data.getData();
 			Log.d(TAG, "feedUri: " + feedUri.toString());
 			
-			Musubi musubi = Musubi.getInstance(this);
-			
-			DbFeed feed = musubi.getFeed(feedUri);
+			DbFeed feed = mMusubi.getFeed(feedUri);
 			uriPresenter.setText(feedUri.toString());
 			getPreferences(android.content.Context.MODE_PRIVATE).edit().putString(KEY_FEED_URI, feedUri.toString()).apply();
 			if (feed == null) {
