@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
 	
 	private static final String ACTION_CREATE_FEED = "musubi.intent.action.CREATE_FEED";
 	private static final int REQUEST_CREATE_FEED = 1;
+	private static final String ACTION_EDIT_FEED = "musubi.intent.action.EDIT_FEED";
+	private static final int REQUEST_EDIT_FEED = 2;
 	
 	private Musubi mMusubi;
 	
@@ -85,8 +87,17 @@ public class MainActivity extends Activity {
 				Log.d(TAG, "Musubi is not installed.");
 				return super.onOptionsItemSelected(item);
 			}
-			Intent intent = new Intent(ACTION_CREATE_FEED);
-			startActivityForResult(intent, REQUEST_CREATE_FEED);
+			Intent intent = new Intent();
+			int request;
+			if (feedUri == null) {
+				intent.setAction(ACTION_CREATE_FEED);
+				request = REQUEST_CREATE_FEED;
+			} else {
+				intent.setAction(ACTION_EDIT_FEED);
+				request = REQUEST_EDIT_FEED;
+				intent.setData(feedUri);
+			}
+			startActivityForResult(intent, request);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
